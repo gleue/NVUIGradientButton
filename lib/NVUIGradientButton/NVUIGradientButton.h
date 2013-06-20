@@ -18,6 +18,7 @@ typedef NS_ENUM(NSUInteger, NVUIGradientButtonStyle)
 @interface NVUIGradientButton : UIControl
 
 @property (nonatomic, assign) NVUIGradientButtonStyle style;
+@property (nonatomic, assign) UIRectCorner roundedCorners; // default is UIRectCornerAllCorners
 @property (nonatomic, assign) CGFloat cornerRadius UI_APPEARANCE_SELECTOR; // default is 10.0
 @property (nonatomic, assign) CGFloat borderWidth UI_APPEARANCE_SELECTOR; // default is 2.0
 @property (nonatomic, strong) UIColor *tintColor UI_APPEARANCE_SELECTOR; // default is gray

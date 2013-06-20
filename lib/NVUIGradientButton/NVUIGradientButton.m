@@ -113,6 +113,7 @@ static CGGradientRef NVCGGradientCreate(CGColorRef startColor, CGColorRef endCol
 
 #pragma mark - Creation
 
+#define NVUIGradientButtonDefaultRoundedCorners	UIRectCornerAllCorners
 #define NVUIGradientButtonDefaultCorderRadius	10.0
 #define NVUIGradientButtonDefaultBorderWidth	2.0
 
@@ -221,6 +222,7 @@ static CGGradientRef NVCGGradientCreate(CGColorRef startColor, CGColorRef endCol
 	self = [super initWithFrame:frame];
     if (self)
 	{
+        _roundedCorners = NVUIGradientButtonDefaultRoundedCorners;
 		_cornerRadius = cornerRadius;
 		_borderWidth = borderWidth;
 		_text = [text copy];
@@ -262,6 +264,7 @@ static CGGradientRef NVCGGradientCreate(CGColorRef startColor, CGColorRef endCol
 	self = [super initWithCoder:aDecoder];
 	if (self)
 	{
+        _roundedCorners = NVUIGradientButtonDefaultRoundedCorners;
 		_cornerRadius = NVUIGradientButtonDefaultCorderRadius;
 		_borderWidth = NVUIGradientButtonDefaultBorderWidth;
 		
@@ -282,6 +285,16 @@ static CGGradientRef NVCGGradientCreate(CGColorRef startColor, CGColorRef endCol
 		_style = style;
 		[self updateAccordingToStyle];
 	}
+}
+
+
+- (void)setRoundedCorners:(UIRectCorner)roundedCorners
+{
+    if (roundedCorners != _roundedCorners)
+    {
+        _roundedCorners = roundedCorners;
+        [self setNeedsDisplay];
+    }
 }
 
 
@@ -843,7 +856,18 @@ static CGGradientRef NVCGGradientCreate(CGColorRef startColor, CGColorRef endCol
 {
 	// Setting Env
 	CGContextRef ctx = UIGraphicsGetCurrentContext();
-	UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:_cornerRadius];
+	UIBezierPath *path = nil;
+    
+    if (_roundedCorners != UIRectCornerAllCorners)
+    {
+        CGSize radii = CGSizeMake(_cornerRadius, _cornerRadius);
+        path = [UIBezierPath bezierPathWithRoundedRect:self.bounds byRoundingCorners:_roundedCorners cornerRadii:radii];
+    }
+    else
+    {
+        path = [UIBezierPath bezierPathWithRoundedRect:self.bounds cornerRadius:_cornerRadius];
+    }
+
 	CGFloat padding = _borderWidth + DEFAULT_PADDING;
 	UIColor *borderColor = [self borderColorAccordingToCurrentState];
 	UIColor *textColor = [self textColorAccordingToCurrentState];
